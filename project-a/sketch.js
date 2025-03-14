@@ -36,13 +36,21 @@ let time = 0;
 
 let changeColor = false;
 
+let noiseValue
+let noiseValueY
+
+let x0;
+let y0;
+let cx;
 
 function setup() {
+  createCanvas(800, 500);
   
   let canvas = createCanvas(800, 500);
   canvas.id("p5-canvas");
   canvas.parent("p5-canvas-container");
-
+  
+  
   creatureColor = color(0)
   Col = color(random(255), random(255), random(255))
   //painting color & circle size
@@ -51,9 +59,6 @@ function setup() {
   circleSize = random(20,60);
   sheetColor =  color(random(0,255), random(0,255), random(0,255));
   
- 
-
-
   // bed position
   if(random(0,100)<50){
     bedX = 400;
@@ -96,15 +101,29 @@ function setup() {
   }else{
     rectX2 = 700;
   }
+  
+  // just a test cx probably needs to be global :D
+  noiseValue = noise(frameCount*0.03);
+  x0 = map(noiseValue, 0, 1, 7.5, 50)+20;
+  
+  noiseValueY = noise(frameCount*0.01);
+  y0 = map(noiseValueY, 0, 1, 7.5, 50)+20;
+  
+  if(headX == 160){
+    cx = x0+20
+  }else{
+    cx = width-x0-20
+  }
 
 } 
 
 function draw() {
-  
   let timeOfDay = sin(frameCount*0.003);
   let bc = map(timeOfDay, -1, 1, 60, 235);
   // background(255);
   noStroke();
+  
+  //changessssss
   
   //floor
   let floorR = map(timeOfDay, -1, 1, 180,255);
@@ -131,25 +150,16 @@ function draw() {
   rect(bedFrame2, 300, 40, 60); 
   fill(sheetColor);  
   rect(sheet, 320, 200, 100);
-
-  
-  let noiseValue = noise(frameCount*0.03);
-  let x = map(noiseValue, 0, 1, 7.5, 50)+20;
-  
-  let noiseSalue = noise(frameCount*0.01);
-  let y = map(noiseValue, 0, 1, 7.5, 50)+20;
   
   sinInput = sinInput + speed;
   let sinValue = sin(sinInput); 
  
   let circleSSize = map(sinValue, -1, 1, 0.8,1.3);
   
-    if(headX == 160){ // left
-      drawCreature(x+20, y+20, circleSSize, creatureColor);
-     
-    }else{ // right
-      drawCreature(width-x-20, y, circleSSize, creatureColor);
-     
+  if(headX == 160){ // left
+      drawCreature(cx, y0+20, circleSSize, creatureColor);
+  }else{ // right
+      drawCreature(cx, y0+20, circleSSize, creatureColor);
   }
   
   if (dream == true) {
@@ -157,39 +167,49 @@ function draw() {
       dreamX -= 0.2;
     }else{
       dreamX += 0.1;
-    }
-    
-    fill(255);
-    circle(dreamX, dreamY, dreamR);
-    dreamY -= 0.5;
-    dreamR += 0.04;
+    }  
   
+  let d = dist(dreamX, dreamY, cx,y0+20);
+  // console.log(cx)
+  // console.log(d)
+    
+  fill(255);
+  circle(dreamX, dreamY, dreamR);
+  dreamY -= 0.5;
+  dreamR += 0.04;
+    
+  if (d < dreamR+20) { 
+    dream = false; 
+    changeColor = true;
+    time = 0; 
+    }
+  }
 
-    let d = dist(dreamX, dreamY, x , y );
-    
-    if (d < dreamR) { 
-      dream = false; 
-      changeColor = true;
+  if (changeColor) {
+    time++;
+    if (time <= 300) { 
+      // t = map(time,0,300,0,1)
+      // creatureColor = lerpColor(color(0),Col,t);
+      creatureColor = Col
+    } else {
+      // t = map(time,300,600,0,1)
+      // creatureColor = lerpColor(Col,color(0),t); 
+      creatureColor = color(0)
+      changeColor = false; 
     }
   }
-  
-  if (changeColor==true){
-    time ++;
-    if(time < 300) { // fps = 60
-      creatureColor = Col;
-    }else{
-      creatureColor = color(0);
-    }
-  }
-  
 }
 
  function mousePressed(){
   if (appear){
     dream = true;
+    dreamX = headX; 
+    dreamY = 350;
+    dreamR = 20;
+    time = 0;
+    changeColor = false; // Allow color change again
   } 
  }  
-
 
 
 function drawCreature(transx, transy, circleSSize, c){
@@ -211,9 +231,7 @@ function drawCreature(transx, transy, circleSSize, c){
   fill(255);
   circle(0+5, 0-8, 3);
   circle(0-5, 0-8, 3);
-  
-  // fill("red")
-  // circle(0,0,5) 
+   
   pop();
   
 
