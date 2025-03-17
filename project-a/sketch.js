@@ -1,3 +1,7 @@
+let circleX = 400;
+let circleY = 490;
+let circleR = 90;
+
 let creatureColor;
 
 let sinInput = 0; 
@@ -43,6 +47,12 @@ let x0;
 let y0;
 let cx;
 
+let dreamCol;
+let good = false;
+let bad = false;
+let goodCol
+let badCol
+
 function setup() {
   createCanvas(800, 500);
   
@@ -50,14 +60,20 @@ function setup() {
   canvas.id("p5-canvas");
   canvas.parent("p5-canvas-container");
   
+  refreshroom();
   
+} 
+
+function refreshroom(){
+ 
   creatureColor = color(0)
-  Col = color(random(255), random(255), random(255))
   //painting color & circle size
   bgColor = color(random(0, 255), random(60,110), random(70,110));
   circleColor = color(random(0,255),random(0,255),random(0,255));
   circleSize = random(20,60);
   sheetColor =  color(random(0,255), random(0,255), random(0,255));
+  goodCol = color(random(255),random(255),random(255))
+  badCol = color(random(255))
   
   // bed position
   if(random(0,100)<50){
@@ -101,29 +117,13 @@ function setup() {
   }else{
     rectX2 = 700;
   }
-  
-  // just a test cx probably needs to be global :D
-  noiseValue = noise(frameCount*0.03);
-  x0 = map(noiseValue, 0, 1, 7.5, 50)+20;
-  
-  noiseValueY = noise(frameCount*0.01);
-  y0 = map(noiseValueY, 0, 1, 7.5, 50)+20;
-  
-  if(headX == 160){
-    cx = x0+20
-  }else{
-    cx = width-x0-20
-  }
-
-} 
+}
 
 function draw() {
   let timeOfDay = sin(frameCount*0.003);
   let bc = map(timeOfDay, -1, 1, 60, 235);
   // background(255);
   noStroke();
-  
-  //changessssss
   
   //floor
   let floorR = map(timeOfDay, -1, 1, 180,255);
@@ -151,29 +151,43 @@ function draw() {
   fill(sheetColor);  
   rect(sheet, 320, 200, 100);
   
+  noiseValue = noise(frameCount*0.03);
+  x0 = map(noiseValue, 0, 1, 7.5, 50)+20;
+  
+  noiseValueY = noise(frameCount*0.01);
+  y0 = map(noiseValueY, 0, 1, 7.5, 50)+20;
+  
   sinInput = sinInput + speed;
   let sinValue = sin(sinInput); 
  
   let circleSSize = map(sinValue, -1, 1, 0.8,1.3);
   
   if(headX == 160){ // left
+      cx = x0+20
       drawCreature(cx, y0+20, circleSSize, creatureColor);
   }else{ // right
+      cx = width-x0-20
       drawCreature(cx, y0+20, circleSSize, creatureColor);
   }
   
   if (dream == true) {
     if(headX == 160){
-      dreamX -= 0.2;
+      dreamX -= 0.15;
     }else{
-      dreamX += 0.1;
+      dreamX += 0.15;
     }  
   
   let d = dist(dreamX, dreamY, cx,y0+20);
-  // console.log(cx)
-  // console.log(d)
     
-  fill(255);
+  if (good == true){
+    dreamCol = goodCol
+  }else if (bad == true){
+    dreamCol = badCol
+  }else{
+    dreamCol = color(255)
+  }
+    
+  fill(dreamCol); // bubble color
   circle(dreamX, dreamY, dreamR);
   dreamY -= 0.5;
   dreamR += 0.04;
@@ -188,29 +202,21 @@ function draw() {
   if (changeColor) {
     time++;
     if (time <= 300) { 
-      // t = map(time,0,300,0,1)
-      // creatureColor = lerpColor(color(0),Col,t);
-      creatureColor = Col
+      creatureColor = dreamCol
+      
     } else {
-      // t = map(time,300,600,0,1)
-      // creatureColor = lerpColor(Col,color(0),t); 
+      
       creatureColor = color(0)
       changeColor = false; 
+      good = false;
+      bad = false;
     }
   }
+  
+  generatebutton();
+  let d = dist(mouseX, mouseY, circleX, circleY);
+  
 }
-
- function mousePressed(){
-  if (appear){
-    dream = true;
-    dreamX = headX; 
-    dreamY = 350;
-    dreamR = 20;
-    time = 0;
-    changeColor = false; // Allow color change again
-  } 
- }  
-
 
 function drawCreature(transx, transy, circleSSize, c){
   
@@ -234,7 +240,6 @@ function drawCreature(transx, transy, circleSSize, c){
    
   pop();
   
-
 }
 
 function drawRoom(t,bc){
@@ -374,4 +379,78 @@ function drawRoom(t,bc){
   rect(bedX, 320, 260, 100);
   fill(220);
   rect(bedX, 380, 260, 40);
+  
+  //security camera
+  push();
+  translate(300,0);
+  fill("red");
+  circle(0+25, 0+8, 40);
+  fill(155);
+  rect(0, 0, 50,15);
+  pop();
+}
+
+function generatebutton(){
+  // generate room butoon
+  fill(100);
+  circle(400, 490, 100);
+  fill("red");
+  circle(circleX, circleY, circleR); // defalult: 400, 490, 90
+  fill(255);
+  textSize(16);
+  stroke(255);
+  strokeWeight(1.2);
+  text("Generate", 368, 475);
+  text("Room", 378, 490);
+  
+  // good dream
+  let alpha = map(sin(frameCount*0.003),-1,1,0,1)
+  let goodCol1 = color(0,0,255)
+  let goodCol2 = color(204, 238, 255)
+  fill(lerpColor(goodCol1, goodCol2,alpha))
+  circle(circleX-170, circleY+5, circleR-10);
+  fill(255);
+  textSize(16);
+  stroke(255);
+  strokeWeight(1.2);
+  text("Good", 210, 476);
+  text("Dream", 205, 496);
+  
+  // bad dream
+  let badCol1 = color(0)
+  let badCol2 = color(180)
+  fill(lerpColor(badCol1, badCol2,alpha))
+  circle(circleX+170, circleY+5, circleR-10);
+  fill(255);
+  textSize(16);
+  stroke(255);
+  strokeWeight(1.2);
+  text("Bad", 555, 476);
+  text("Dream", 545, 495);
+}
+
+function mousePressed(){
+  let d = dist(mouseX, mouseY, circleX, circleY);
+  if (d < circleR){
+    refreshroom();
+  } else if (appear) {
+    dream = true;
+    dreamX = headX; 
+    dreamY = 350;
+    dreamR = 20;
+    time = 0;
+    changeColor = false; 
+  }
+  
+  let d1 = dist(mouseX, mouseY, circleX-170, circleY+5);
+  if (d1 < circleR-10 && bad != true){
+    // good dream
+    good = true
+  }
+  
+  let d2 = dist(mouseX, mouseY, circleX+170, circleY+5);
+  if (d2 < circleR-10 && good != true){
+    // bad dream
+    bad = true
+  }
 }
