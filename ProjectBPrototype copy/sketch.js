@@ -6,6 +6,15 @@ let topFlowerImg1;
 let imageTop;
 let imageMid;
 let imageBot;
+let imageBotX;
+let imageBotY;
+let imageMidX;
+let imageMidY;
+let imageTopX;
+let imageTopY;
+let imageBotScale;
+let imageMidScale;
+let imageTopScale;
 
 
 let flowers = [];
@@ -71,9 +80,17 @@ function mouseClicked() {
     let mouseDist4 = dist(mouseX, mouseY, width * 3 / 4, height / 2);
     if (mouseDist1 <= 25) {
       imageBot = botFlower1
+      imageBotScale = 0.14
+      imageBotX = 2000;
+      imageBotY = 1700;
+
       stage = 2;
     } else if (mouseDist2 <= 25) {
       imageBot = botFlower2
+      imageBotScale = 0.25;
+      imageBotX = 1310;
+      imageBotY = 1100;
+
       stage = 2;
     }
     // }else if (mouseDist3 <= 25) {
@@ -88,9 +105,17 @@ function mouseClicked() {
     let mouseDist2 = dist(mouseX, mouseY, width * 3 / 4, height / 2);
     if (mouseDist1 <= 25) {
       imageMid = midFlower1
+      imageMidScale = 0.14;
+      imageMidX = 2300;
+      imageMidY = 940;
+
       stage = 3;
     } else if (mouseDist2 <= 25) {
       imageMid = midFlower2
+      imageMidScale = 0.18;
+      imageMidX = 1910;
+      imageMidY = 850;
+
       stage = 3;
     }
   } else if (stage == 3) {
@@ -98,9 +123,17 @@ function mouseClicked() {
     let mouseDist2 = dist(mouseX, mouseY, width * 3 / 4, height / 2);
     if (mouseDist1 <= 25) {
       imageTop = topFlower1
+      imageTopScale = 0.16;
+      imageTopX = 1410;
+      imageTopY = 300;
+
       stage = 'displayFlower';
     } else if (mouseDist2 <= 25) {
       imageTop = topFlower2
+      imageTopScale = 0.16;
+      imageTopX = 1910;
+      imageTopY = 500;
+
       stage = 'displayFlower';
     }
   } else if (stage == 'displayFlower') {
@@ -138,8 +171,18 @@ class Flower {
     this.imgTop = imgTop;
     this.imgMid = imgMid;
     this.imgBot = imgBot;
-    this.x = 250;
-    this.y = 50;
+    this.x = 0;
+    this.y = 0;
+
+    this.imageBotX = imageBotX;
+    this.imageBotY = imageBotY;
+    this.imageMidX = imageMidX;
+    this.imageMidY = imageMidY;
+    this.imageTopX = imageTopX;
+    this.imageTopY = imageTopY;
+    this.imageBotScale = imageBotScale;
+    this.imageMidScale = imageMidScale;
+    this.imageTopScale = imageTopScale;
   }
 
   display() {
@@ -149,20 +192,20 @@ class Flower {
 
     //flowerBot
     push();
-    scale(0.16);
-    image (imageBot, 100, 1200);
+    scale(imageBotScale);
+    image (imageBot, imageBotX, imageBotY);
     pop();
 
     //flowerMid
     push();
-    scale(0.16);
-    image (imageMid, 400, 500);
+    scale(imageMidScale);
+    image (imageMid, imageMidX, imageMidY);
     pop();
     
     //flowerTop
     push();
-    scale(0.16);
-    image (imageTop, 0, 0);
+    scale(imageTopScale);
+    image (imageTop, imageTopX, imageTopY);
     pop();
 
     pop();
