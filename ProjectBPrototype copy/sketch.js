@@ -25,7 +25,7 @@ function preload(){
   botFlower1 = loadImage("assets/botFlower1.png");
   botFlower2 = loadImage("assets/botFlower2.png");
   botFlower3 = loadImage("assets/botFlower3.webp");
-  botFlower4 = loadImage("assets/botflower4.webp");
+  botFlower4 = loadImage("assets/botFlower4.webp");
 
   midFlower1 = loadImage("assets/midFlower1.png");
   midFlower2 = loadImage("assets/midFlower2.png");
