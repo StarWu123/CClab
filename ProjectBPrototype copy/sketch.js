@@ -47,14 +47,14 @@ let flowerPos = [];
 
 let song;
 
-let capture;
+// let capture;
 
 
 function preload(){
   botFlowers.push( loadImage("assets/botFlower1.gif") );
   botFlowers.push( loadImage("assets/botFlower2.gif") );
-  botFlowers.push( loadImage("assets/botFlower3.webp") );
-  botFlowers.push( loadImage("assets/botFlower4.webp") );
+  botFlowers.push( loadImage("assets/botFlower3.png") );
+  botFlowers.push( loadImage("assets/botFlower4.png") );
 
   midFlowers.push( loadImage("assets/midFlower1.png") );
   midFlowers.push( loadImage("assets/midFlower2.png") );
@@ -62,8 +62,8 @@ function preload(){
   midFlowers.push( loadImage("assets/midFlower4.png") );
 
   sideFlowers.push( loadImage("assets/sideFlower1.png") );
-  sideFlowers.push( loadImage("assets/sideFlower2.webp") );
-  sideFlowers.push( loadImage("assets/sideFlower3.webp") );
+  sideFlowers.push( loadImage("assets/sideFlower2.png") );
+  sideFlowers.push( loadImage("assets/sideFlower3.png") );
   sideFlowers.push( loadImage("assets/sideFlower4.png") );
 
   topFlowers.push( loadImage("assets/topFlower1.gif") );
@@ -84,8 +84,8 @@ function setup() {
   rectMode(CENTER);
   song.loop();
   
-  capture = createCapture(VIDEO);
-  capture.hide();
+  // capture = createCapture(VIDEO);
+  // capture.hide();
 
   flowers = getItem('flowers');
   if(flowers == null){
@@ -111,11 +111,11 @@ function draw() {
     for(let i = 0; i < flowers.length; i ++) {
       push();
       
-      translate(flowers[i].gardenX , flowers[i].gardenY + height);
-      flowers[i].displayGarden(0, 0);
+      translate(flowers[i].gardenX , flowers[i].gardenY);
+      // flowers[i].displayGarden(0, 0);
       pop();
 
-
+      
     }
     newFlowerAdded = false;
   } else if (stage == 1) {
@@ -127,8 +127,8 @@ function draw() {
   } else if (stage == 4) {
     stage4();
   } else if (stage == 'displayFlower') {
-    image(capture, 0, 0, width, width * capture.height / capture.width);
-    filter(BLUR,5);
+    // image(capture, 0, 0, width, width * capture.height / capture.width);
+    // filter(BLUR,5);
 
     if (newFlowerAdded == false) {
       // displayFlower();
@@ -136,13 +136,12 @@ function draw() {
       storeItem('flowers', flowers);
       flowers[flowers.length - 1].gardenX = random(width)
       flowers[flowers.length - 1].gardenY = random(height)
-      // flowerPos.push([random(width), random(height)]);
+      flowerPos.push([random(width), random(height)]);
       console.log(flowers);
       newFlowerAdded = true;
     }
     flowers[flowers.length - 1].displaySolo(width / 2, height / 2);
     drawDoneButton();
-  
   } 
 
   let doneColor = dist(mouseX, mouseY, width/2, height * 3.5/4);
@@ -324,6 +323,7 @@ function stage0() {
   line(0, 310, 800, 310);
   line(0, 375, 800, 375);
   line(0, 437, 800, 437);
+  
   drawStartButton();
   pop();
 }
@@ -616,7 +616,7 @@ class Flower {
     this.displayParts() 
     fill("red")
     circle(0, 0, 5)
-    push()
+    pop()
   }
   displayGarden(){
     push();
@@ -625,7 +625,7 @@ class Flower {
     this.displayParts() 
     fill("red")
     circle(0, 0, 5)
-    push()
+    pop()
 
   }
   displayParts() {
@@ -634,59 +634,59 @@ class Flower {
     if (this.imgMidIdx == 0) {
       //====== change later ======
       scale(0.2);
-      translate(-(1920 / 2), -(1080 / 2) - 100);
+      translate(-(1920 / 2) - 25, -(1080 / 2) - 100);
       image(midFlowers[0], 0, 0);
     }else if (this.imgMidIdx == 1) {
       scale(0.19);
-      translate(-(1920 / 2), -(1080 / 2) - 100);
+      translate(-(1920 / 2) - 25, -(1080 / 2) - 100);
       image(midFlowers[1], 0, 0);
     }else if (this.imgMidIdx == 2) {
       scale(0.19);
-      translate(-(1920 / 2), -(1080 / 2) - 100);
+      translate(-(1920 / 2) - 25, -(1080 / 2) - 100);
       image(midFlowers[2], 0, 0);
     }else if (this.imgMidIdx == 3) {
       scale(0.19);
-      translate(-(1920 / 2), -(1080 / 2) - 100);
+      translate(-(1920 / 2) - 25, -(1080 / 2) - 100);
       image(midFlowers[3], 0, 0);
     }
     pop();
     //side
     push();
     if (this.imgSideIdx == 0) {
-      scale(0.2);
-      translate(-(1920 / 2), -(1080 / 2) - 100);
+      scale(0.15);
+      translate(-(1920 / 2) - 30, -(1080 / 2) - 350);
       image(sideFlowers[0], 0, 0);
     }else if (this.imgSideIdx == 1) {
-      scale(0.19);
-      translate(-(1920 / 2), -(1080 / 2) - 100);
+      scale(0.15);
+      translate(-(1920 / 2) - 30, -(1080 / 2) - 350);
       image(sideFlowers[1], 0, 0);
     }else if (this.imgSideIdx == 2) {
-      scale(0.19);
-      translate(-(1920 / 2), -(1080 / 2) - 100);
+      scale(0.15);
+      translate(-(1920 / 2) - 30, -(1080 / 2) - 350);
       image(sideFlowers[2], 0, 0);
     }else if (this.imgSideIdx == 3) {
-      scale(0.19);
-      translate(-(1920 / 2), -(1080 / 2) - 100);
+      scale(0.15);
+      translate(-(1920 / 2) - 30, -(1080 / 2) - 350);
       image(sideFlowers[3], 0, 0);
     }
     pop();
     //bot
     push();
     if (this.imgBotIdx == 0) {
-      scale(0.1);
+      scale(0.11);
       translate(-(1920 / 2), -(1080 / 2) + 900);
       image(botFlowers[0], 0, 0);
     } else if (this.imgBotIdx == 1) {
-      scale(0.1);
-      translate(-(1920 / 2), -(1080 / 2) + 900);
+      scale(0.10);
+      translate(-(1920 / 2) - 20, -(1080 / 2) + 900);
       image(botFlowers[1], 0, 0);
     }else if (this.imgBotIdx == 2) {
-      scale(0.13);
-      translate(-(1920 / 2) + 450, -(1080 / 2) + 900);
+      scale(0.11);
+      translate(-(1920 / 2) - 20, -(1080 / 2) + 500);
       image(botFlowers[2], 0, 0);
     }else if (this.imgBotIdx == 3) {
-      scale(0.08);
-      translate(-(1920 / 3) - 200, -(1080 / 2) + 900);
+      scale(0.11);
+      translate(-(1920 / 3) - 250, -(1080 / 2) + 700);
       image(botFlowers[3], 0, 0); 
     }
 
@@ -703,7 +703,7 @@ class Flower {
       image(topFlowers[1], 0, 0);
     } else if (this.imgTopIdx == 2) {
       scale(0.13);
-      translate(-(1920 / 2) - 50, -(1080 / 2) - 1000);
+      translate(-(1920 / 2) - 40, -(1080 / 2) - 1000);
       image(topFlowers[2], 0, 0);
     } else if (this.imgTopIdx == 3) {
       scale(0.15);
