@@ -9,20 +9,23 @@ let circleColor, circleColor2, circleColor3, circleColor4;
 let squareColor, squareColor2, squareColor3, squareColor4;
 let square2Color, square2Color2, square2Color3, square2Color4;
 let circle2Color, circle2Color2, circle2Color3, circle2Color4;
-let doneColor;
-let startColor;
+
 let doneButtonColor;
 let startButtonColor;
 
 let topFlowerImg1;
 let imageTop;
+let imageTopIndex;
 let imageMid;
 let imageSide;
 let imageBot;
+let imageBotIndex;
 let imageBotX;
 let imageBotY;
+let imageMidIndex;
 let imageMidX;
 let imageMidY;
+let imageSideIndex;
 let imageSideX;
 let imageSideY;
 let imageTopX;
@@ -32,6 +35,11 @@ let imageMidScale;
 let imageSideScale;
 let imageTopScale;
 
+let botFlowers = []
+let midFlowers = []
+let sideFlowers = []
+let topFlowers = []
+
 
 let flowers = [];
 let newFlowerAdded = false;
@@ -39,30 +47,36 @@ let flowerPos = [];
 
 let song;
 
+let capture;
+
 
 function preload(){
-  botFlower1 = loadImage("assets/botFlower1.png");
-  botFlower2 = loadImage("assets/botFlower2.png");
-  botFlower3 = loadImage("assets/botFlower3.webp");
-  botFlower4 = loadImage("assets/botFlower4.webp");
+  botFlowers.push( loadImage("assets/botFlower1.gif") );
+  botFlowers.push( loadImage("assets/botFlower2.gif") );
+  botFlowers.push( loadImage("assets/botFlower3.webp") );
+  botFlowers.push( loadImage("assets/botFlower4.webp") );
 
-  midFlower1 = loadImage("assets/midFlower1.png");
-  midFlower2 = loadImage("assets/midFlower2.png");
-  midFlower3 = loadImage("assets/midFlower3.png");
-  midFlower4 = loadImage("assets/midFlower4.png");
+  midFlowers.push( loadImage("assets/midFlower1.png") );
+  midFlowers.push( loadImage("assets/midFlower2.png") );
+  midFlowers.push( loadImage("assets/midFlower3.png") );
+  midFlowers.push( loadImage("assets/midFlower4.png") );
 
-  sideFlower1 = loadImage("assets/sideFlower1.png");
-  sideFlower2 = loadImage("assets/sideFlower2.webp");
-  sideFlower3 = loadImage("assets/sideFlower3.webp");
-  sideFlower4 = loadImage("assets/sideFlower4.png");
+  sideFlowers.push( loadImage("assets/sideFlower1.png") );
+  sideFlowers.push( loadImage("assets/sideFlower2.webp") );
+  sideFlowers.push( loadImage("assets/sideFlower3.webp") );
+  sideFlowers.push( loadImage("assets/sideFlower4.png") );
 
-  topFlower1 = loadImage("assets/topFlower1.gif");
-  topFlower2 = loadImage("assets/topFlower2.gif");
-  topFlower3 = loadImage("assets/topFlower3.gif");
-  topFlower4 = loadImage("assets/topFlower4.gif");
+  topFlowers.push( loadImage("assets/topFlower1.gif") );
+  topFlowers.push( loadImage("assets/topFlower2.gif") );
+  topFlowers.push( loadImage("assets/topFlower3.gif") );
+  topFlowers.push( loadImage("assets/topFlower4.gif") );
+
 
   song = loadSound("assets/Music.mp3");
 }
+
+
+let fixPosFlower
 
 function setup() {
   let canvas = createCanvas(800, 500);
@@ -70,6 +84,16 @@ function setup() {
   rectMode(CENTER);
   song.loop();
   
+  capture = createCapture(VIDEO);
+  capture.hide();
+
+  flowers = getItem('flowers');
+  if(flowers == null){
+    flowers = []
+  }
+  
+  console.log(flowers)
+  // fixPosFlower = new Flower(0, 0, 1, 0) // xxxxxx no need
 }
 
 function mousePressed() {
@@ -80,16 +104,19 @@ function mousePressed() {
 
 function draw() {
   background(0);
-
+  // fixPosFlower.displaySolo(width / 2, height / 2) // xxxxxx no need
+  
   if (stage == 0) {
     stage0();
-    // for(let i = 0; i < flowers.length; i ++) {
-    //   push();
-    //   scale(0.3);
-    //   translate(flowerPos[i][0] - width / 2, flowerPos[i][1] - height / 2 + 100);
-    //   flowers[i].display();
-    //   pop();
-    // }
+    for(let i = 0; i < flowers.length; i ++) {
+      push();
+      
+      translate(flowers[i].gardenX , flowers[i].gardenY + height);
+      flowers[i].displayGarden(0, 0);
+      pop();
+
+
+    }
     newFlowerAdded = false;
   } else if (stage == 1) {
     stage1();
@@ -100,15 +127,22 @@ function draw() {
   } else if (stage == 4) {
     stage4();
   } else if (stage == 'displayFlower') {
+    image(capture, 0, 0, width, width * capture.height / capture.width);
+    filter(BLUR,5);
+
     if (newFlowerAdded == false) {
       // displayFlower();
-      flowers.push(new Flower(imageTop, imageMid, imageSide, imageBot))
-      flowerPos.push([random(width), random(height)]);
+      flowers.push(new Flower(imageTopIndex, imageMidIndex, imageSideIndex, imageBotIndex))
+      storeItem('flowers', flowers);
+      flowers[flowers.length - 1].gardenX = random(width)
+      flowers[flowers.length - 1].gardenY = random(height)
+      // flowerPos.push([random(width), random(height)]);
       console.log(flowers);
       newFlowerAdded = true;
     }
-    flowers[flowers.length - 1].display(width / 2, height / 2);
+    flowers[flowers.length - 1].displaySolo(width / 2, height / 2);
     drawDoneButton();
+  
   } 
 
   let doneColor = dist(mouseX, mouseY, width/2, height * 3.5/4);
@@ -124,6 +158,7 @@ function draw() {
   } else {
     startButtonColor = 255
   }
+    
 }
 
 function mouseClicked() {
@@ -139,28 +174,32 @@ function mouseClicked() {
     let mouseDist3 = dist(mouseX, mouseY, 260, 380);
     let mouseDist4 = dist(mouseX, mouseY, 640, 380);
     if (mouseDist1 <= 25) {
-      imageBot = botFlower1
-      imageBotScale = 0.14
-      imageBotX = 2000;
-      imageBotY = 1700;
+      // imageBot = botFlower1 // we dont need anynmmore because the index
+      imageBotIndex = 0
+      imageBotScale = 0.12
+      imageBotX = 2300;
+      imageBotY = 2250;
 
       stage = 2;
     } else if (mouseDist2 <= 25) {
-      imageBot = botFlower2
-      imageBotScale = 0.25;
-      imageBotX = 1310;
-      imageBotY = 1100;
+      // imageBot = botFlower2 // we dont need anynmmore because the index
+      imageBotIndex = 1
+      imageBotScale = 0.10;
+      imageBotX = 2700;
+      imageBotY = 2700;
 
       stage = 2;
     }else if (mouseDist3 <= 25) {
-      imageBot = botFlower3
+      // imageBot = botFlower3 // we dont need anynmmore because the index
+      imageBotIndex = 2
       imageBotScale = 0.17;
       imageBotX = 1850;
       imageBotY = 1600;
 
       stage = 2;
     }else if (mouseDist4 <= 25) {
-      imageBot = botFlower4
+      // imageBot = botFlower4 
+      imageBotIndex = 3
       imageBotScale = 0.10;
       imageBotX = 3010;
       imageBotY = 2300;
@@ -173,28 +212,28 @@ function mouseClicked() {
     let mouseDist3 = dist(mouseX, mouseY, 650, 240);
     let mouseDist4 = dist(mouseX, mouseY, 420, 420);
     if (mouseDist1 <= 25) {
-      imageMid = midFlower1
+      imageMidIndex = 0
       imageMidScale = 0.14;
       imageMidX = 2300;
       imageMidY = 940;
 
       stage = 3;
     } else if (mouseDist2 <= 25) {
-      imageMid = midFlower2
+      imageMidIndex = 1
       imageMidScale = 0.18;
       imageMidX = 1910;
       imageMidY = 850;
 
       stage = 3;
     } else if (mouseDist3 <= 25) {
-      imageMid = midFlower3
+      imageMidIndex = 2
       imageMidScale = 0.18;
       imageMidX = 1910;
       imageMidY = 850;
 
       stage = 3;
     } else if (mouseDist4 <= 25) {
-      imageMid = midFlower4
+      imageMidIndex = 3
       imageMidScale = 0.18;
       imageMidX = 1910;
       imageMidY = 850;
@@ -202,33 +241,33 @@ function mouseClicked() {
       stage = 3;
     }
   } else if (stage == 3) {
-    let mouseDist1 = dist(mouseX, mouseY, 380, 80);
-    let mouseDist2 = dist(mouseX, mouseY, 150, 260);
-    let mouseDist3 = dist(mouseX, mouseY, 650, 240);
-    let mouseDist4 = dist(mouseX, mouseY, 420, 420);
+    let mouseDist1 = dist(mouseX, mouseY, 200, 150);
+    let mouseDist2 = dist(mouseX, mouseY, 600, 150);
+    let mouseDist3 = dist(mouseX, mouseY,  200, 350);
+    let mouseDist4 = dist(mouseX, mouseY, 600, 350);
     if (mouseDist1 <= 25) {
-      imageSide = sideFlower1
+      imageSideIndex = 0
       imageSideScale = 0.14;
       imageSideX = 2300;
       imageSideY = 940;
 
       stage = 4;
     } else if (mouseDist2 <= 25) {
-      imageSide = sideFlower2
+      imageSideIndex = 1
       imageSideScale = 0.18;
       imageSideX = 1910;
       imageSideY = 850;
 
       stage = 4;
     } else if (mouseDist3 <= 25) {
-      imageSide = sideFlower3
+      imageSideIndex = 2
       imageSideScale = 0.18;
       imageSideX = 1910;
       imageSideY = 850;
 
       stage = 4;
     } else if (mouseDist4 <= 25) {
-      imageSide = sideFlower4
+      imageSideIndex = 3
       imageSideScale = 0.18;
       imageSideX = 1910;
       imageSideY = 850;
@@ -241,28 +280,28 @@ function mouseClicked() {
     let mouseDist3 = dist(mouseX, mouseY, 560, 400);
     let mouseDist4 = dist(mouseX, mouseY, 170, 370);
     if (mouseDist1 <= 25) {
-      imageTop = topFlower1
+      imageTopIndex = 0
       imageTopScale = 0.16;
       imageTopX = 1410;
       imageTopY = 300;
 
       stage = 'displayFlower';
     } else if (mouseDist2 <= 25) {
-      imageTop = topFlower2
+      imageTopIndex = 1
       imageTopScale = 0.12;
       imageTopX = 2250;
       imageTopY = 250;
 
       stage = 'displayFlower';
     } else if (mouseDist3 <= 25) {
-      imageTop = topFlower3
+      imageTopIndex = 2
       imageTopScale = 0.13;
       imageTopX = 2050;
       imageTopY = 350;
 
       stage = 'displayFlower';
     } else if (mouseDist4 <= 25) {
-      imageTop = topFlower4
+      imageTopIndex = 3
       imageTopScale = 0.14;
       imageTopX = 1800;
       imageTopY = 250;
@@ -416,25 +455,25 @@ function stage2() {
 
 function stage3() {
   push();
-  let square2Color = dist(mouseX, mouseY, 380, 80);
+  let square2Color = dist(mouseX, mouseY, 200, 150);
   if (square2Color < 25) {
     a3 = 100
   } else {
     a3 = 255
   }
-  let square2Color2 = dist(mouseX, mouseY, 150, 260);
+  let square2Color2 = dist(mouseX, mouseY, 600, 150);
   if (square2Color2 < 25) {
-    b3 = 100
-  } else {
-    b3 = 255
-  }
-  let square2Color3 = dist(mouseX, mouseY, 650, 240);
-  if (square2Color3 < 25) {
     c3 = 100
   } else {
     c3 = 255
   }
-  let square2Color4 = dist(mouseX, mouseY, 420, 420);
+  let square2Color3 = dist(mouseX, mouseY, 200, 350);
+  if (square2Color3 < 25) {
+    b3 = 100
+  } else {
+    b3 = 255
+  }
+  let square2Color4 = dist(mouseX, mouseY, 600, 350);
   if (square2Color4 < 25) {
     d3 = 100
   } else {
@@ -445,9 +484,9 @@ function stage3() {
   textFont('Courier New');
   textSize(17);
   textStyle(BOLD);
-  let t = "";
+  let r = "You’re told to pack just one item before a long, unpredictable journey. It won’t help you survive, but it will keep you grounded. Which do you take?";
   textAlign(CENTER, CENTER);
-  text(t, width/2, height/2, 300, 200);
+  text(r, width/2, height/2, 300, 200);
 
   // Set text properties
   textSize(14);
@@ -457,23 +496,23 @@ function stage3() {
 
   // Rectangle A
   fill(255, a3);
-  rect(380, 80, 50, 50); // width and height are needed for rect
-  text("", 180, 80, 300); // y = 80 + 25 (center)
+  rect( 200, 150, 50, 50); // width and height are needed for rect
+  text("A heavy wool coat that smells like home", 180, 80, 300); // y = 80 + 25 (center)
 
   // Rectangle B
   fill(255, b3);
-  rect(150, 260, 50, 50);
-  text("", 210, 350, 300);
+  rect(200, 350, 50, 50);
+  text("A pocket-sized notebook filled with unfinished thoughts", 210, 420, 300);
 
   // Rectangle C
   fill(255, c3);
-  rect(650, 240, 50, 50);
-  text("", 640, 140, 300);
+  rect(600, 150, 50, 50);
+  text("A stone worn smooth by your own hands", 640, 80, 300);
 
   // Rectangle D
   fill(255, d3);
-  rect(420, 420, 50, 50);
-  text("", 640, 420, 300);
+  rect(600, 350, 50, 50);
+  text("A photograph of someone you barely remember, but miss anyway", 640, 420, 300);
   pop();
 }
 
@@ -541,59 +580,136 @@ function stage4() {
 }
 
 class Flower {
-  constructor(imgTop, imgMid, imgSide, imgBot) {
-    this.imgTop = imgTop;
-    this.imgMid = imgMid;
-    this.imgSide = imgSide;
-    this.imgBot = imgBot;
-    this.x = 0;
-    this.y = 0;
+  constructor(imgTopIdx, imgMidIdx, imgSideIdx, imgBotIdx) {
+  this.imgBotIdx = imgBotIdx;
+  this.imgMidIdx = imgMidIdx;
+  this.imgSideIdx = imgSideIdx;
+  this.imgTopIdx = imgTopIdx;
+  
+  this.gardenX = 0;
+  this.gardenY = 0;
 
-    this.imageBotX = imageBotX;
-    this.imageBotY = imageBotY;
-    this.imageMidX = imageMidX;
-    this.imageMidY = imageMidY;
-    this.imageSideX = imageSideX;
-    this.imageSideY = imageSideY;
-    this.imageTopX = imageTopX;
-    this.imageTopY = imageTopY;
-    this.imageBotScale = imageBotScale;
-    this.imageMidScale = imageMidScale;
-    this.imageSideScale = imageSideScale;
-    this.imageTopScale = imageTopScale;
-  }
+  this.x = 0;
+  this.y = 0;
 
-  display() {
-    // console.log(imageTop)
+  this.imageBotX = imageBotX;
+  this.imageBotY = imageBotY;
+  this.imageMidX = imageMidX;
+  this.imageMidY = imageMidY;
+  this.imageSideX = imageSideX;
+  this.imageSideY = imageSideY;
+  this.imageTopX = imageTopX;
+  this.imageTopY = imageTopY;
+  // this.imageBotScale = imageBotScale;
+  // this.imageMidScale = imageMidScale;
+  // this.imageSideScale = imageSideScale;
+  // this.imageTopScale = imageTopScale;
+}
+
+
+  displaySolo(x, y){
+    this.x = x;
+    this.y = y;
     push();
     translate(this.x, this.y);
-
-    //flowerMid
+    scale(1)
+    this.displayParts() 
+    fill("red")
+    circle(0, 0, 5)
+    push()
+  }
+  displayGarden(){
     push();
-    // translate(this.imageMid)
-    scale(this.imageMidScale);
-    image (this.imgMid, this.imageMidX, this.imageMidY);
-    pop();
+    translate(this.gardenX, this.gardenY);
+    scale(0.3)
+    this.displayParts() 
+    fill("red")
+    circle(0, 0, 5)
+    push()
 
-    //flowerSide
+  }
+  displayParts() {
+    //mid
     push();
-    // translate(this.imageSide)
-    scale(this.imageSideScale);
-    image (this.imgSide, this.imageSideX, this.imageSideY);
+    if (this.imgMidIdx == 0) {
+      //====== change later ======
+      scale(0.2);
+      translate(-(1920 / 2), -(1080 / 2) - 100);
+      image(midFlowers[0], 0, 0);
+    }else if (this.imgMidIdx == 1) {
+      scale(0.19);
+      translate(-(1920 / 2), -(1080 / 2) - 100);
+      image(midFlowers[1], 0, 0);
+    }else if (this.imgMidIdx == 2) {
+      scale(0.19);
+      translate(-(1920 / 2), -(1080 / 2) - 100);
+      image(midFlowers[2], 0, 0);
+    }else if (this.imgMidIdx == 3) {
+      scale(0.19);
+      translate(-(1920 / 2), -(1080 / 2) - 100);
+      image(midFlowers[3], 0, 0);
+    }
     pop();
-    
-    //flowerBot
+    //side
     push();
-    scale(this.imageBotScale);
-    image (this.imgBot, this.imageBotX, this.imageBotY);
+    if (this.imgSideIdx == 0) {
+      scale(0.2);
+      translate(-(1920 / 2), -(1080 / 2) - 100);
+      image(sideFlowers[0], 0, 0);
+    }else if (this.imgSideIdx == 1) {
+      scale(0.19);
+      translate(-(1920 / 2), -(1080 / 2) - 100);
+      image(sideFlowers[1], 0, 0);
+    }else if (this.imgSideIdx == 2) {
+      scale(0.19);
+      translate(-(1920 / 2), -(1080 / 2) - 100);
+      image(sideFlowers[2], 0, 0);
+    }else if (this.imgSideIdx == 3) {
+      scale(0.19);
+      translate(-(1920 / 2), -(1080 / 2) - 100);
+      image(sideFlowers[3], 0, 0);
+    }
     pop();
+    //bot
+    push();
+    if (this.imgBotIdx == 0) {
+      scale(0.1);
+      translate(-(1920 / 2), -(1080 / 2) + 900);
+      image(botFlowers[0], 0, 0);
+    } else if (this.imgBotIdx == 1) {
+      scale(0.1);
+      translate(-(1920 / 2), -(1080 / 2) + 900);
+      image(botFlowers[1], 0, 0);
+    }else if (this.imgBotIdx == 2) {
+      scale(0.13);
+      translate(-(1920 / 2) + 450, -(1080 / 2) + 900);
+      image(botFlowers[2], 0, 0);
+    }else if (this.imgBotIdx == 3) {
+      scale(0.08);
+      translate(-(1920 / 3) - 200, -(1080 / 2) + 900);
+      image(botFlowers[3], 0, 0); 
+    }
 
-    //flowerTop
-    push();
-    scale(this.imageTopScale);
-    image (this.imgTop, this.imageTopX, this.imageTopY);
     pop();
-
+    //top
+    push();
+    if (this.imgTopIdx == 0) {
+      scale(0.15);
+      translate(-(1920 / 2), -(1080 / 2) - 1000);
+      image(topFlowers[0], 0, 0);
+    } else if (this.imgTopIdx == 1) {
+      scale(0.13);
+      translate(-(1920 / 2) - 50, -(1080 / 2) - 1000);
+      image(topFlowers[1], 0, 0);
+    } else if (this.imgTopIdx == 2) {
+      scale(0.13);
+      translate(-(1920 / 2) - 50, -(1080 / 2) - 1000);
+      image(topFlowers[2], 0, 0);
+    } else if (this.imgTopIdx == 3) {
+      scale(0.15);
+      translate(-(1920 / 2) - 50, -(1080 / 2) - 1000);
+      image(topFlowers[3], 0, 0);
+    }
     pop();
     
   }
@@ -611,6 +727,8 @@ function drawDoneButton(){
   textFont('Courier New')
   text("DONE", -23, 8);
   pop();
+
+  console.log('test');
 
 }
 
