@@ -200,28 +200,28 @@ function mouseClicked() {
     let mouseDist2 = dist(mouseX, mouseY, width * 0.2, height * 0.5);
     let mouseDist3 = dist(mouseX, mouseY, width * 0.8, height * 0.45);
     let mouseDist4 = dist(mouseX, mouseY, width * 0.55, height * 0.75);
-    if (mouseDist1 <= 25) {
+    if (mouseDist1 <= 30) {
       imageMidIndex = 0
       imageMidScale = 0.14;
       imageMidX = 2300;
       imageMidY = 940;
 
       stage = 3;
-    } else if (mouseDist2 <= 25) {
+    } else if (mouseDist2 <= 30) {
       imageMidIndex = 1
       imageMidScale = 0.18;
       imageMidX = 1910;
       imageMidY = 850;
 
       stage = 3;
-    } else if (mouseDist3 <= 25) {
+    } else if (mouseDist3 <= 30) {
       imageMidIndex = 2
       imageMidScale = 0.18;
       imageMidX = 1910;
       imageMidY = 850;
 
       stage = 3;
-    } else if (mouseDist4 <= 25) {
+    } else if (mouseDist4 <= 30) {
       imageMidIndex = 3
       imageMidScale = 0.18;
       imageMidX = 1910;
@@ -234,28 +234,28 @@ function mouseClicked() {
     let mouseDist2 = dist(mouseX, mouseY, width * 0.75, height * 0.3);
     let mouseDist3 = dist(mouseX, mouseY,  width * 0.25, height * 0.7);
     let mouseDist4 = dist(mouseX, mouseY, width * 0.75, height * 0.7);
-    if (mouseDist1 <= 25) {
+    if (mouseDist1 <= 30) {
       imageSideIndex = 0
       imageSideScale = 0.14;
       imageSideX = 2300;
       imageSideY = 940;
 
       stage = 4;
-    } else if (mouseDist2 <= 25) {
+    } else if (mouseDist2 <= 30) {
       imageSideIndex = 1
       imageSideScale = 0.18;
       imageSideX = 1910;
       imageSideY = 850;
 
       stage = 4;
-    } else if (mouseDist3 <= 25) {
+    } else if (mouseDist3 <= 30) {
       imageSideIndex = 2
       imageSideScale = 0.18;
       imageSideX = 1910;
       imageSideY = 850;
 
       stage = 4;
-    } else if (mouseDist4 <= 25) {
+    } else if (mouseDist4 <= 30) {
       imageSideIndex = 3
       imageSideScale = 0.18;
       imageSideX = 1910;
@@ -504,7 +504,7 @@ function stage3() {
   fill(255);
   textFont('Courier New');
   textStyle(BOLD);
-  textSize(30);
+  textSize(26);
   let r = "You’re told to pack just one item before a long, unpredictable journey. It won’t help you survive, but it will keep you grounded. Which do you take?";
   textAlign(CENTER, CENTER);
   text(r, width / 2, height / 2, width / 3, height / 5);
