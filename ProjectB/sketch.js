@@ -43,7 +43,7 @@ let topFlowers = []
 
 let flowers = [];
 let newFlowerAdded = false;
-let flowerPos = [];
+// let flowerPos = [];
 
 let song;
 
@@ -79,7 +79,7 @@ function preload(){
 let fixPosFlower
 
 function setup() {
-  let canvas = createCanvas(800, 500);
+  let canvas = createCanvas(windowWidth, windowHeight);
   canvas.parent("p5-canvas-container");
   rectMode(CENTER);
   song.loop();
@@ -87,7 +87,7 @@ function setup() {
   // capture = createCapture(VIDEO);
   // capture.hide();
 
-  flowers = getItem('flowers');
+  // flowers = getItem('flowers');
   if(flowers == null){
     flowers = []
   }
@@ -108,16 +108,6 @@ function draw() {
   
   if (stage == 0) {
     stage0();
-    for(let i = 0; i < flowers.length; i ++) {
-      push();
-      
-      translate(flowers[i].gardenX , flowers[i].gardenY);
-      // flowers[i].displayGarden(0, 0);
-      pop();
-
-      
-    }
-    newFlowerAdded = false;
   } else if (stage == 1) {
     stage1();
   } else if (stage == 2) {
@@ -133,10 +123,10 @@ function draw() {
     if (newFlowerAdded == false) {
       // displayFlower();
       flowers.push(new Flower(imageTopIndex, imageMidIndex, imageSideIndex, imageBotIndex))
-      storeItem('flowers', flowers);
-      flowers[flowers.length - 1].gardenX = random(width)
-      flowers[flowers.length - 1].gardenY = random(height)
-      flowerPos.push([random(width), random(height)]);
+      // storeItem('flowers', flowers);
+      flowers[flowers.length - 1].gardenX = random(70, width - 70)
+      flowers[flowers.length - 1].gardenY = random(height / 2, height - height / 8)
+      // flowerPos.push([random(width), random(height)]);
       console.log(flowers);
       newFlowerAdded = true;
     }
@@ -151,8 +141,8 @@ function draw() {
     doneButtonColor = 255
   }
 
-  let startColor = dist(mouseX, mouseY, width/2 , height * 3/4);
-  if (startColor < 25) {
+  // let startColor = dist(mouseX, mouseY, width/2 , height * 3/4);
+  if (mouseX > width / 2 - 75 && mouseX < width / 2 + 75 && mouseY > height * 3 / 4 - 75 / 2 && mouseY < height * 3 / 4 + 75 / 2) {
     startButtonColor = 100
   } else {
     startButtonColor = 255
@@ -168,10 +158,10 @@ function mouseClicked() {
       stage = 1;
     }
   } else if (stage == 1) {
-    let mouseDist1 = dist(mouseX, mouseY, 160, 120);
-    let mouseDist2 = dist(mouseX, mouseY, 540, 120);
-    let mouseDist3 = dist(mouseX, mouseY, 260, 380);
-    let mouseDist4 = dist(mouseX, mouseY, 640, 380);
+    let mouseDist1 = dist(mouseX, mouseY, width / 4 - width / 15, height / 4);
+    let mouseDist2 = dist(mouseX, mouseY, width * 3 / 4 - width / 15, height / 4);
+    let mouseDist3 = dist(mouseX, mouseY, width / 4 + width / 15, height * 3 / 4);
+    let mouseDist4 = dist(mouseX, mouseY, width * 3 / 4 + width / 15, height * 3 / 4);
     if (mouseDist1 <= 25) {
       // imageBot = botFlower1 // we dont need anynmmore because the index
       imageBotIndex = 0
@@ -206,10 +196,10 @@ function mouseClicked() {
       stage = 2;
     }
   }else if (stage == 2) {
-    let mouseDist1 = dist(mouseX, mouseY, 380, 80);
-    let mouseDist2 = dist(mouseX, mouseY, 150, 260);
-    let mouseDist3 = dist(mouseX, mouseY, 650, 240);
-    let mouseDist4 = dist(mouseX, mouseY, 420, 420);
+    let mouseDist1 = dist(mouseX, mouseY, width * 0.5, height * 0.2);
+    let mouseDist2 = dist(mouseX, mouseY, width * 0.2, height * 0.5);
+    let mouseDist3 = dist(mouseX, mouseY, width * 0.8, height * 0.45);
+    let mouseDist4 = dist(mouseX, mouseY, width * 0.55, height * 0.75);
     if (mouseDist1 <= 25) {
       imageMidIndex = 0
       imageMidScale = 0.14;
@@ -240,10 +230,10 @@ function mouseClicked() {
       stage = 3;
     }
   } else if (stage == 3) {
-    let mouseDist1 = dist(mouseX, mouseY, 200, 150);
-    let mouseDist2 = dist(mouseX, mouseY, 600, 150);
-    let mouseDist3 = dist(mouseX, mouseY,  200, 350);
-    let mouseDist4 = dist(mouseX, mouseY, 600, 350);
+    let mouseDist1 = dist(mouseX, mouseY, width * 0.25, height * 0.3);
+    let mouseDist2 = dist(mouseX, mouseY, width * 0.75, height * 0.3);
+    let mouseDist3 = dist(mouseX, mouseY,  width * 0.25, height * 0.7);
+    let mouseDist4 = dist(mouseX, mouseY, width * 0.75, height * 0.7);
     if (mouseDist1 <= 25) {
       imageSideIndex = 0
       imageSideScale = 0.14;
@@ -274,10 +264,10 @@ function mouseClicked() {
       stage = 4;
     }
   } else if (stage == 4) {
-    let mouseDist1 = dist(mouseX, mouseY, 260, 80);
-    let mouseDist2 = dist(mouseX, mouseY, 640, 130);
-    let mouseDist3 = dist(mouseX, mouseY, 560, 400);
-    let mouseDist4 = dist(mouseX, mouseY, 170, 370);
+    let mouseDist1 = dist(mouseX, mouseY, width * 0.3, height * 0.2);
+    let mouseDist2 = dist(mouseX, mouseY, width * 0.7, height * 0.25);
+    let mouseDist3 = dist(mouseX, mouseY, width * 0.65, height * 0.80);
+    let mouseDist4 = dist(mouseX, mouseY, width * 0.2, height * 0.75);
     if (mouseDist1 <= 25) {
       imageTopIndex = 0
       imageTopScale = 0.16;
@@ -319,10 +309,24 @@ function stage0() {
   push();
   stroke(255);
   strokeWeight(0.8);
-  line(0, 250, 800, 250);
-  line(0, 310, 800, 310);
-  line(0, 375, 800, 375);
-  line(0, 437, 800, 437);
+  line(0, height/2, width, height/2);
+  line(0, height*0.75, width, height*0.75);
+  line(0, height*0.875, width, height*0.875);
+  line(0, height*0.625, width, height*0.625);
+
+  if (flowers.length > 30) {
+    flowers.splice(0, 1);
+  }
+
+  for(let i = 0; i < flowers.length; i ++) {
+    push();
+    translate(flowers[i].gardenX , flowers[i].gardenY);
+    flowers[i].displayGarden();
+    pop(); 
+  }
+
+  
+  newFlowerAdded = false;
   
   drawStartButton();
   pop();
@@ -330,25 +334,25 @@ function stage0() {
 
 function stage1() {
   push();
-  let circleColor = dist(mouseX, mouseY, 160, 120);
+  let circleColor = dist(mouseX, mouseY, width / 4 - width / 15, height / 4);
   if (circleColor < 25) {
     a1 = 100
   } else {
     a1 = 255
   }
-  let circleColor2 = dist(mouseX, mouseY, 540, 120);
+  let circleColor2 = dist(mouseX, mouseY, width * 3 / 4 - width / 15, height / 4);
   if (circleColor2 < 25) {
     b1 = 100
   } else {
     b1 = 255
   }
-  let circleColor3 = dist(mouseX, mouseY, 260, 380);
+  let circleColor3 = dist(mouseX, mouseY, width / 4 + width / 15, height * 3 / 4);
   if (circleColor3 < 25) {
     c1 = 100
   } else {
     c1 = 255
   }
-  let circleColor4 = dist(mouseX, mouseY, 640, 380);
+  let circleColor4 = dist(mouseX, mouseY, width * 3 / 4 + width / 15, height * 3 / 4);
   if (circleColor4 < 25) {
     d1 = 100
   } else {
@@ -358,224 +362,250 @@ function stage1() {
   fill(255);
   textFont('Courier New');
   textStyle(BOLD);
-  textSize(19);
+  textSize(30);
   let s = "A machine asks you to define emotion using something it can measure. What do you give it?";
   textAlign(CENTER, CENTER);
-  text(s, width/2, height/2, 300, 200);
+  text(s, width/2, height/2, width / 3, height / 5);
 
-  textSize(14);
+  // textSize(14);
+  // textStyle(NORMAL);
+  // fill(255); // white text
+  // textAlign(LEFT, CENTER);
+
+  push();
+  textSize(25);
   textStyle(NORMAL);
-  fill(255); // white text
-  textAlign(LEFT, CENTER);
+  textAlign(CENTER, CENTER);
 
   // Circle A
   fill(255, a1);
-  circle(160, 120, 50);
-  text("A flickering signal that changes every time it’s observed", 210, 50, 380);
+  circle(width / 4 - width / 15, height / 4, 50);
+  text("A flickering signal that changes every time it’s observed", width / 4 - width / 18, height / 4 - height / 10, width / 3);
 
   // Circle B
   fill(255, b1);
-  circle(540, 120, 50);
-  text("A waveform with no beginning, only echoes", 420, 50);
+  circle(width * 3 / 4 - width / 15, height / 4, 50);
+  text("A waveform with no beginning, only echoes", width * 3 / 4 - width / 15, height / 4 - height / 10);
 
   // Circle C
   fill(255, c1);
-  circle(260, 380, 50);
-  text("A mineral vein that only glows when touched", 25, 450);
+  circle(width / 4 + width / 15, height * 3 / 4, 50);
+  text("A mineral vein that only glows when touched", width / 4 + width / 15, height * 3 / 4 + height / 10);
 
   // Circle D
   fill(255, d1);
-  circle(640, 380, 50);
-  text("A recursive pattern that breaks itself to grow", 600, 450, 370);
+  circle(width * 3 / 4 + width / 15, height * 3 / 4, 50);
+  text("A recursive pattern that breaks itself to grow", width * 3 / 4 + width / 18, height * 3 / 4 + height / 10, width / 3);
+  pop();
   pop();
 }
 
 function stage2() {
   push();
-  let squareColor = dist(mouseX, mouseY, 380, 80);
-  if (squareColor < 25) {
-    a2 = 100
+
+  let squareColor = dist(mouseX, mouseY, width * 0.5, height * 0.2);
+  if (squareColor < 40) {
+    a2 = 100;
   } else {
-    a2 = 255
+    a2 = 255;
   }
-  let squareColor2 = dist(mouseX, mouseY, 150, 260);
-  if (squareColor2 < 25) {
-    b2 = 100
+
+  let squareColor2 = dist(mouseX, mouseY, width * 0.2, height * 0.5);
+  if (squareColor2 < 40) {
+    b2 = 100;
   } else {
-    b2 = 255
+    b2 = 255;
   }
-  let squareColor3 = dist(mouseX, mouseY, 650, 240);
-  if (squareColor3 < 25) {
-    c2 = 100
+
+  let squareColor3 = dist(mouseX, mouseY, width * 0.8, height * 0.45);
+  if (squareColor3 < 40) {
+    c2 = 100;
   } else {
-    c2 = 255
+    c2 = 255;
   }
-  let squareColor4 = dist(mouseX, mouseY, 420, 420);
-  if (squareColor4 < 25) {
-    d2 = 100
+
+  let squareColor4 = dist(mouseX, mouseY, width * 0.55, height * 0.75);
+  if (squareColor4 < 40) {
+    d2 = 100;
   } else {
-    d2 = 255
+    d2 = 255;
   }
 
   fill(255);
   textFont('Courier New');
-  textSize(17);
   textStyle(BOLD);
+  textSize(30);
   let t = "You are allowed to bury one feeling so that it may bloom in someone else a thousand years from now. Which do you plant?";
   textAlign(CENTER, CENTER);
-  text(t, width/2, height/2, 300, 200);
+  text(t, width / 2, height / 2, width / 3, height / 5);
 
-  // Set text properties
-  textSize(14);
+  push();
+  textSize(25);
   textStyle(NORMAL);
-  fill(255); // white text
-  textAlign(LEFT, CENTER);
+  textAlign(CENTER, CENTER);
 
   // Rectangle A
   fill(255, a2);
-  rect(380, 80, 50, 50); // width and height are needed for rect
-  text("Reverence — the stillness that honors something greater than the self", 180, 80, 300); // y = 80 + 25 (center)
+  rectMode(CENTER);
+  rect(width * 0.5, height * 0.2, min(width, height) / 15, min(width, height) / 15);
+  text("Reverence — the stillness that honors something greater than the self", width * 0.5, height * 0.2 - height / 10, width / 3);
 
   // Rectangle B
   fill(255, b2);
-  rect(150, 260, 50, 50);
-  text("Courage — not absence of fear, but the choice to act within it", 210, 350, 300);
+  rect(width * 0.2, height * 0.5, min(width, height) / 15, min(width, height) / 15);
+  text("Courage — not absence of fear, but the choice to act within it", width * 0.2, height * 0.5 + height / 8, width / 3);
 
   // Rectangle C
   fill(255, c2);
-  rect(650, 240, 50, 50);
-  text("Tenderness — the quiet strength of letting others in", 640, 140, 300);
+  rect(width * 0.8, height * 0.45, min(width, height) / 15, min(width, height) / 15);
+  text("Tenderness — the quiet strength of letting others in", width * 0.8, height * 0.45 - height / 8, width / 3);
 
   // Rectangle D
   fill(255, d2);
-  rect(420, 420, 50, 50);
-  text("Remorse — the ache that becomes a vow to do better", 640, 420, 300);
+  rect(width * 0.55, height * 0.75, min(width, height) / 15, min(width, height) / 15);
+  text("Remorse — the ache that becomes a vow to do better", width * 0.55, height * 0.75 + height / 8, width / 3);
+
+  pop();
   pop();
 }
 
+
 function stage3() {
   push();
-  let square2Color = dist(mouseX, mouseY, 200, 150);
-  if (square2Color < 25) {
-    a3 = 100
+
+  let square2Color = dist(mouseX, mouseY, width * 0.25, height * 0.3);
+  if (square2Color < 40) {
+    a3 = 100;
   } else {
-    a3 = 255
+    a3 = 255;
   }
-  let square2Color2 = dist(mouseX, mouseY, 600, 150);
-  if (square2Color2 < 25) {
-    c3 = 100
+
+  let square2Color2 = dist(mouseX, mouseY, width * 0.75, height * 0.3);
+  if (square2Color2 < 40) {
+    c3 = 100;
   } else {
-    c3 = 255
+    c3 = 255;
   }
-  let square2Color3 = dist(mouseX, mouseY, 200, 350);
-  if (square2Color3 < 25) {
-    b3 = 100
+
+  let square2Color3 = dist(mouseX, mouseY, width * 0.25, height * 0.7);
+  if (square2Color3 < 40) {
+    b3 = 100;
   } else {
-    b3 = 255
+    b3 = 255;
   }
-  let square2Color4 = dist(mouseX, mouseY, 600, 350);
-  if (square2Color4 < 25) {
-    d3 = 100
+
+  let square2Color4 = dist(mouseX, mouseY, width * 0.75, height * 0.7);
+  if (square2Color4 < 40) {
+    d3 = 100;
   } else {
-    d3 = 255
+    d3 = 255;
   }
 
   fill(255);
   textFont('Courier New');
-  textSize(17);
   textStyle(BOLD);
+  textSize(30);
   let r = "You’re told to pack just one item before a long, unpredictable journey. It won’t help you survive, but it will keep you grounded. Which do you take?";
   textAlign(CENTER, CENTER);
-  text(r, width/2, height/2, 300, 200);
+  text(r, width / 2, height / 2, width / 3, height / 5);
 
-  // Set text properties
-  textSize(14);
+  push();
+  textSize(25);
   textStyle(NORMAL);
-  fill(255); // white text
-  textAlign(LEFT, CENTER);
+  textAlign(CENTER, CENTER);
+  fill(255);
 
   // Rectangle A
   fill(255, a3);
-  rect( 200, 150, 50, 50); // width and height are needed for rect
-  text("A heavy wool coat that smells like home", 180, 80, 300); // y = 80 + 25 (center)
+  rectMode(CENTER);
+  rect(width * 0.25, height * 0.3, min(width, height) / 15, min(width, height) / 15);
+  text("A heavy wool coat that smells like home", width * 0.25, height * 0.3 - height / 8, width / 3);
 
   // Rectangle B
   fill(255, b3);
-  rect(200, 350, 50, 50);
-  text("A pocket-sized notebook filled with unfinished thoughts", 210, 420, 300);
+  rect(width * 0.25, height * 0.7, min(width, height) / 15, min(width, height) / 15);
+  text("A pocket-sized notebook filled with unfinished thoughts", width * 0.25, height * 0.7 + height / 8, width / 3);
 
   // Rectangle C
   fill(255, c3);
-  rect(600, 150, 50, 50);
-  text("A stone worn smooth by your own hands", 640, 80, 300);
+  rect(width * 0.75, height * 0.3, min(width, height) / 15, min(width, height) / 15);
+  text("A stone worn smooth by your own hands", width * 0.75, height * 0.3 - height / 8, width / 3);
 
   // Rectangle D
   fill(255, d3);
-  rect(600, 350, 50, 50);
-  text("A photograph of someone you barely remember, but miss anyway", 640, 420, 300);
+  rect(width * 0.75, height * 0.7, min(width, height) / 15, min(width, height) / 15);
+  text("A photograph of someone you barely remember, but miss anyway", width * 0.75, height * 0.7 + height / 8, width / 3);
+
+  pop();
   pop();
 }
 
 function stage4() {
   push();
-  let circle2Color = dist(mouseX, mouseY, 260, 80);
-  if (circle2Color < 25) {
-    a4 = 100
+
+  let circle2Color = dist(mouseX, mouseY, width * 0.3, height * 0.2);
+  if (circle2Color < 40) {
+    a4 = 100;
   } else {
-    a4 = 255
+    a4 = 255;
   }
-  let circle2Color2 = dist(mouseX, mouseY, 640, 130);
-  if (circle2Color2 < 25) {
-    b4 = 100
+
+  let circle2Color2 = dist(mouseX, mouseY, width * 0.7, height * 0.25);
+  if (circle2Color2 < 40) {
+    b4 = 100;
   } else {
-    b4 = 255
+    b4 = 255;
   }
-  let circle2Color3 = dist(mouseX, mouseY, 560, 400);
-  if (circle2Color3 < 25) {
-    c4 = 100
+
+  let circle2Color3 = dist(mouseX, mouseY, width * 0.65, height * 0.80);
+  if (circle2Color3 < 40) {
+    c4 = 100;
   } else {
-    c4 = 255
+    c4 = 255;
   }
-  let circle2Color4 = dist(mouseX, mouseY, 170, 370);
-  if (circle2Color4 < 25) {
-    d4 = 100
+
+  let circle2Color4 = dist(mouseX, mouseY,width * 0.2, height * 0.75);
+  if (circle2Color4 < 40) {
+    d4 = 100;
   } else {
-    d4 = 255
+    d4 = 255;
   }
 
   fill(255);
   textFont('Courier New');
-  textSize(17);
+  textSize(30);
   textStyle(BOLD);
   let a = "You enter a vast hall with four doors, each glowing faintly. You may open only one. Which do you choose?";
   textAlign(CENTER, CENTER);
-  text(a, width/2, height/2, 300, 200);
+  text(a, width / 2, height / 2, width / 3, height / 5);
 
-  // Set text properties
-  textSize(14);
+  push();
+  textSize(25);
   textStyle(NORMAL);
-  fill(255); // white text
-  textAlign(LEFT, CENTER);
+  textAlign(CENTER, CENTER);
+  fill(255);
 
   // Circle A
   fill(255, a4);
-  circle(260, 80, 50);
-  text("A door of black marble, humming with quiet tension", 300, 40);
+  circle(width * 0.3, height * 0.2, min(width, height) / 15);
+  text("A door of black marble, humming with quiet tension", width * 0.3 + width / 12, height * 0.2 - height / 10);
 
   // Circle B
   fill(255, b4);
-  circle(640, 130, 50);
-  text("A door of cracked gold, warm to the touch", 230, 140);
+  circle(width * 0.7, height * 0.25, min(width, height) / 15);
+  text("A door of cracked gold, warm to the touch", width * 0.7 - width / 12, height * 0.25 + height / 10);
 
   // Circle C
   fill(255, c4);
-  circle(560, 400, 50);
-  text("A door of green glass, fogged from within", 200, 450);
+  circle(width * 0.65, height * 0.80, min(width, height) / 15);
+  text("A door of green glass, fogged from within", width * 0.65 - width / 12, height * 0.75 + height / 7);
 
   // Circle D
   fill(255, d4);
-  circle(170, 370, 50);
-  text("A door of silver threads, slightly ajar", 220, 350);
+  circle(width * 0.2, height * 0.75, min(width, height) / 15);
+  text("A door of silver threads, slightly ajar", width * 0.2 + width / 12, height * 0.65);
+
+  pop();
   pop();
 }
 
@@ -586,8 +616,35 @@ class Flower {
   this.imgSideIdx = imgSideIdx;
   this.imgTopIdx = imgTopIdx;
   
+  // console.log(flowers.length)
+  // if (flowers.length == 0) {
+  //   console.log('test')
+  //   this.gardenX = random(70, width - 70);
+  //   this.gardenY = random(height / 2, height - height / 8);
+  // } else {
+  //   let x = random(70, width - 70);
+  //   let y = random(height / 2, height - height / 8);
+  //   for (let i = 0; i < flowers.length; i ++) {
+  //       if (i >= 1) {
+  //         console.log(x, y)
+  //         while(abs(flowers[i - 1].gardenX - x) <= width / 25 && abs(flowers[i - 1].gardenY - y) <= height / 25) {
+  //           x = random(70, width - 70);
+  //           y = random(height / 2, height - height / 8);
+  //           console.log('new')
+  //         }
+  //         this.gardenX = x;
+  //         this.gardenY = y;
+  //         consolle.log(this.gardenX, this.gardenY);
+  //       }
+  //   }
+  // }
+
   this.gardenX = 0;
   this.gardenY = 0;
+  
+  
+  // console.log(this.gardenX)
+  // this.gardenY = 0;
 
   this.x = 0;
   this.y = 0;
@@ -600,10 +657,8 @@ class Flower {
   this.imageSideY = imageSideY;
   this.imageTopX = imageTopX;
   this.imageTopY = imageTopY;
-  // this.imageBotScale = imageBotScale;
-  // this.imageMidScale = imageMidScale;
-  // this.imageSideScale = imageSideScale;
-  // this.imageTopScale = imageTopScale;
+
+  this.scale = random(0.5, 0.8);
 }
 
 
@@ -611,20 +666,15 @@ class Flower {
     this.x = x;
     this.y = y;
     push();
-    translate(this.x, this.y);
-    scale(1)
+    translate(this.x, this.y + 70);
+    scale(2.0)
     this.displayParts() 
-    fill("red")
-    circle(0, 0, 5)
     pop()
   }
   displayGarden(){
     push();
-    translate(this.gardenX, this.gardenY);
-    scale(0.3)
+    scale(this.scale)
     this.displayParts() 
-    fill("red")
-    circle(0, 0, 5)
     pop()
 
   }
@@ -727,9 +777,6 @@ function drawDoneButton(){
   textFont('Courier New')
   text("DONE", -23, 8);
   pop();
-
-  console.log('test');
-
 }
 
 function drawStartButton(){
@@ -737,12 +784,15 @@ function drawStartButton(){
   push();
   translate(width/2, height * 3/4);
   fill(255, startButtonColor);
-  rect(0, 0, 100, 50, 10);
+  rect(0, 0, 150, 75, 10);
+  
+
   //text
   fill(0);
+  textAlign(CENTER);
   textFont('Courier New')
-  textSize(20);
-  text("START", -30, 5);
+  textSize(25);
+  text("START",0,5);
   pop();
 
 }
